@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Day Are You Free in Feb? 📆</title>
+    <style>
+        body {
+            background-color: #FFC0CB;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 {
+            color: red;
+        }
+        .calendar {
+            margin: 20px auto;
+            max-width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .calendar table {
+            width: 100%;
+        }
+        .calendar th, .calendar td {
+            padding: 10px;
+            text-align: center;
+        }
+        .calendar td {
+            cursor: pointer;
+        }
+        .calendar td.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .calendar td.available {
+            color: red;
+            font-weight: bold;
+        }
+        .calendar td.available:hover {
+            background-color: #ffcccc;
+            border-radius: 50%;
+        }
+        .next-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .next-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>What day are you free?</h1>
+        <div class="calendar" id="calendar">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body">
+                    <!-- Calendar dates will be generated here -->
+                </tbody>
+            </table>
+        </div>
+        <button class="next-btn" id="next-btn" onclick="window.location.href='invite.html'">Great, now the day is sorted ;), let's see what we're up to!</button>
+    </div>
+
+    <script>
+        // Get today's date
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth();
+
+        // Set the target date (February 14th, 2025)
+        const targetDate = new Date(2025, 1, 14); // Note: Months are 0-indexed (1 = February)
+
+        // Generate the calendar
+        const calendarBody = document.getElementById('calendar-body');
+        const nextBtn = document.getElementById('next-btn');
+
+        function generateCalendar(year, month) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const endDate = lastDay.getDate();
+
+            let html = '';
+            let date = 1;
+
+            for (let i = 0; i < 6; i++) {
+                html += '<tr>';
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < startDay) {
+                        html += '<td class="disabled"></td>';
+                    } else if (date > endDate) {
+                        html += '<td class="disabled"></td>';
+                    } else {
+                        const currentDate = new Date(year, month, date);
+                        if (currentDate.getTime() === targetDate.getTime()) {
+                            html += `<td class="available" onclick="selectDate()">${date}</td>`;
+                        } else {
+                            html += `<td class="disabled">${date}</td>`;
+                        }
+                        date++;
+                    }
+                }
+                html += '</tr>';
+            }
+
+            calendarBody.innerHTML = html;
+        }
+
+        // Function to handle date selection
+        function selectDate() {
+            nextBtn.style.display = 'inline-block';
+        }
+
+        // Initialize the calendar
+        generateCalendar(currentYear, currentMonth);
+    </script>
+</body>
+</html>
